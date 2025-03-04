@@ -15,7 +15,7 @@ class VirtualHorizon(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Virtual Horizon")
-        self.setGeometry(100, 100, 500, 450)
+        self.setGeometry(100, 100, 400, 400)
         self.setStyleSheet("background-color: black;")
 
         self.scene = QGraphicsScene(-250, -190, 500, 400)
@@ -94,10 +94,10 @@ class VirtualHorizon(QMainWindow):
         self.altitude_text = QGraphicsTextItem("Alt: 0 m")
         self.altitude_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.altitude_text.setDefaultTextColor(Qt.white)
-        self.altitude_text.setPos(140, 100)
+        self.altitude_text.setPos(90, 100)
         self.scene.addItem(self.altitude_text)
 
-        self.vspeed_text = QGraphicsTextItem("VSpeed: 0 m/s")
+        self.vspeed_text = QGraphicsTextItem("VS: 0 m/s")
         self.vspeed_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.vspeed_text.setDefaultTextColor(Qt.white)
         self.vspeed_text.setPos(-190, 100)
@@ -106,13 +106,13 @@ class VirtualHorizon(QMainWindow):
         self.heading_text = QGraphicsTextItem("HDG: 0°")
         self.heading_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.heading_text.setDefaultTextColor(Qt.white)
-        self.heading_text.setPos(-190, -170)
+        self.heading_text.setPos(-190, -180)
         self.scene.addItem(self.heading_text)
 
-        self.airspeed_text = QGraphicsTextItem("Airspeed: 0 m/s")
+        self.airspeed_text = QGraphicsTextItem("AIS: 0 m/s")
         self.airspeed_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.airspeed_text.setDefaultTextColor(Qt.white)
-        self.airspeed_text.setPos(60, -170)
+        self.airspeed_text.setPos(90, -180)
         self.scene.addItem(self.airspeed_text)
 
         self.timer = QTimer()
@@ -125,6 +125,7 @@ class VirtualHorizon(QMainWindow):
             if msg_attitude:
                 pitch = np.degrees(msg_attitude.pitch)
                 roll = np.degrees(msg_attitude.roll)
+                yaw = np.degrees(msg_attitude.yaw)
 
                 transform = QTransform()
                 transform.rotate(-roll, Qt.ZAxis)
@@ -135,14 +136,18 @@ class VirtualHorizon(QMainWindow):
 
                 self.roll_text.setPlainText(f"Roll: {roll:.1f}°")
                 self.pitch_text.setPlainText(f"Pitch: {pitch:.1f}°")
+                self.yaw_text.setPlainText(f"Yaw: {yaw:.1f}°")
+                self.heading_text.setPlainText(f"HDG: {yaw:.1f}°")
 
             msg_vfr = connection.recv_match(type='VFR_HUD', blocking=False)
             if msg_vfr:
                 altitude = msg_vfr.alt
                 vspeed = msg_vfr.climb
+                airspeed = msg_vfr.airspeed
 
                 self.altitude_text.setPlainText(f"Alt: {altitude:.1f} m")
-                self.vspeed_text.setPlainText(f"VSpeed: {vspeed:.1f} m/s")
+                self.vspeed_text.setPlainText(f"VS: {vspeed:.1f} m/s")
+                self.airspeed_text.setPlainText(f"AIS: {airspeed:.1f} m/s")
 
         except Exception as e:
             self.setWindowTitle(f"Error: {e}")
