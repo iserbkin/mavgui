@@ -55,6 +55,7 @@ class VirtualHorizon(QMainWindow):
         self.right_wing.setBrush(QBrush(Qt.yellow))
         self.horizon_group.addToGroup(self.right_wing)
 
+        # 🔄 **Шкала тангажа (Pitch)**
         self.pitch_group = QGraphicsItemGroup()
         self.scene.addItem(self.pitch_group)
 
@@ -101,6 +102,18 @@ class VirtualHorizon(QMainWindow):
         self.vspeed_text.setDefaultTextColor(Qt.white)
         self.vspeed_text.setPos(-190, 100)
         self.scene.addItem(self.vspeed_text)
+
+        self.heading_text = QGraphicsTextItem("HDG: 0°")
+        self.heading_text.setFont(QFont("Arial", 12, QFont.Bold))
+        self.heading_text.setDefaultTextColor(Qt.white)
+        self.heading_text.setPos(-190, -170)
+        self.scene.addItem(self.heading_text)
+
+        self.airspeed_text = QGraphicsTextItem("Airspeed: 0 m/s")
+        self.airspeed_text.setFont(QFont("Arial", 12, QFont.Bold))
+        self.airspeed_text.setDefaultTextColor(Qt.white)
+        self.airspeed_text.setPos(60, -170)
+        self.scene.addItem(self.airspeed_text)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_horizon)
