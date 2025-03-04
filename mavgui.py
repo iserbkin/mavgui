@@ -114,6 +114,12 @@ class VirtualHorizon(QMainWindow):
         self.airspeed_text.setPos(230, -280)
         self.scene.addItem(self.airspeed_text)
 
+        self.armed_status_text = QGraphicsTextItem("DISARMED")
+        self.armed_status_text.setFont(QFont("Arial", 14, QFont.Bold))
+        self.armed_status_text.setDefaultTextColor(Qt.red)
+        self.armed_status_text.setPos(-50, -280)
+        self.scene.addItem(self.armed_status_text)
+
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_horizon)
         self.timer.start(100)  
@@ -147,6 +153,16 @@ class VirtualHorizon(QMainWindow):
                 self.altitude_text.setPlainText(f"Alt: {altitude:.1f} m")
                 self.vspeed_text.setPlainText(f"VS: {vspeed:.1f} m/s")
                 self.airspeed_text.setPlainText(f"AIS: {airspeed:.1f} m/s")
+            
+            msg_armed = connection.recv_match(type='HEARTBEAT', blocking=False)
+            if msg_armed:
+                armed = msg_armed.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED
+                if armed:
+                    self.armed_status_text.setPlainText("ARMED")
+                    self.armed_status_text.setDefaultTextColor(Qt.green)
+                else:
+                    self.armed_status_text.setPlainText("DISARMED")
+                    self.armed_status_text.setDefaultTextColor(Qt.red)
 
         except Exception as e:
             self.setWindowTitle(f"Error: {e}")
