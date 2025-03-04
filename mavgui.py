@@ -55,7 +55,6 @@ class VirtualHorizon(QMainWindow):
         self.right_wing.setBrush(QBrush(Qt.yellow))
         self.horizon_group.addToGroup(self.right_wing)
 
-        # 🔄 **Шкала тангажа (Pitch)**
         self.pitch_group = QGraphicsItemGroup()
         self.scene.addItem(self.pitch_group)
 
