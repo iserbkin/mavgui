@@ -15,7 +15,7 @@ class VirtualHorizon(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Virtual Horizon")
-        self.setGeometry(100, 100, 400, 400)
+        self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: black;")
 
         self.scene = QGraphicsScene(-250, -190, 500, 400)
@@ -25,17 +25,17 @@ class VirtualHorizon(QMainWindow):
         self.view.setSceneRect(-150, -150, 300, 300)
         self.setCentralWidget(self.view)
 
-        self.instrument_bg = QGraphicsEllipseItem(-150, -150, 300, 300)
+        self.instrument_bg = QGraphicsEllipseItem(-150, -150, 200, 200)
         self.instrument_bg.setBrush(QBrush(Qt.black))
         self.scene.addItem(self.instrument_bg)
 
         self.horizon_group = self.scene.createItemGroup([])
 
-        self.sky = QGraphicsRectItem(-200, -200, 400, 200)
+        self.sky = QGraphicsRectItem(-400, -300, 800, 300)
         self.sky.setBrush(QBrush(QColor(100, 149, 237)))  
         self.horizon_group.addToGroup(self.sky)
 
-        self.ground = QGraphicsRectItem(-200, 0, 400, 200)
+        self.ground = QGraphicsRectItem(-400, 0, 800, 300)
         self.ground.setBrush(QBrush(QColor(139, 69, 19)))  
         self.horizon_group.addToGroup(self.ground)
 
@@ -74,17 +74,17 @@ class VirtualHorizon(QMainWindow):
         self.roll_text = QGraphicsTextItem("Roll: 0.0°")
         self.roll_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.roll_text.setDefaultTextColor(Qt.white)
-        self.roll_text.setPos(-130, 160)
+        self.roll_text.setPos(-130, 220)
 
         self.pitch_text = QGraphicsTextItem("Pitch: 0.0°")
         self.pitch_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.pitch_text.setDefaultTextColor(Qt.white)
-        self.pitch_text.setPos(-40, 160)
+        self.pitch_text.setPos(-40, 220)
 
         self.yaw_text = QGraphicsTextItem("Yaw: 0.0°")
         self.yaw_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.yaw_text.setDefaultTextColor(Qt.white)
-        self.yaw_text.setPos(60, 160)
+        self.yaw_text.setPos(60, 220)
 
         self.scene.addItem(self.roll_text)
         self.scene.addItem(self.pitch_text)
@@ -93,25 +93,25 @@ class VirtualHorizon(QMainWindow):
         self.altitude_text = QGraphicsTextItem("Alt: 0 m")
         self.altitude_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.altitude_text.setDefaultTextColor(Qt.white)
-        self.altitude_text.setPos(90, 100)
+        self.altitude_text.setPos(230, 220)
         self.scene.addItem(self.altitude_text)
 
         self.vspeed_text = QGraphicsTextItem("VS: 0 m/s")
         self.vspeed_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.vspeed_text.setDefaultTextColor(Qt.white)
-        self.vspeed_text.setPos(-190, 100)
+        self.vspeed_text.setPos(-350, 220)
         self.scene.addItem(self.vspeed_text)
 
         self.heading_text = QGraphicsTextItem("HDG: 0°")
         self.heading_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.heading_text.setDefaultTextColor(Qt.white)
-        self.heading_text.setPos(-190, -180)
+        self.heading_text.setPos(-350, -280)
         self.scene.addItem(self.heading_text)
 
         self.airspeed_text = QGraphicsTextItem("AIS: 0 m/s")
         self.airspeed_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.airspeed_text.setDefaultTextColor(Qt.white)
-        self.airspeed_text.setPos(90, -180)
+        self.airspeed_text.setPos(230, -280)
         self.scene.addItem(self.airspeed_text)
 
         self.timer = QTimer()
