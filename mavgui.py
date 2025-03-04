@@ -47,6 +47,20 @@ class VirtualHorizon(QMainWindow):
         self.roll_scale.setPen(QPen(Qt.white, 2))
         self.scene.addItem(self.roll_scale)
 
+        for i in range(-30, 40, 5):  
+            width = 15 if i % 10 == 0 else 7  
+            mark = QGraphicsLineItem(-width, -i * 2, width, -i * 2)
+            mark.setPen(QPen(Qt.white, 2))
+            self.horizon_group.addToGroup(mark)
+
+        self.left_wing = QGraphicsRectItem(-80, -5, 30, 5)
+        self.left_wing.setBrush(QBrush(Qt.yellow))
+        self.horizon_group.addToGroup(self.left_wing)
+
+        self.right_wing = QGraphicsRectItem(50, -5, 30, 5)
+        self.right_wing.setBrush(QBrush(Qt.yellow))
+        self.horizon_group.addToGroup(self.right_wing)
+
         self.roll_text = QGraphicsTextItem("Roll: 0.0°")
         self.roll_text.setFont(QFont("Arial", 12, QFont.Bold))
         self.roll_text.setDefaultTextColor(Qt.white)
@@ -94,6 +108,9 @@ class VirtualHorizon(QMainWindow):
                 transform.rotate(-roll, Qt.ZAxis)
                 transform.translate(0, max(-30, min(30, pitch * 2)))  
                 self.horizon_group.setTransform(transform)
+
+                self.left_wing.setTransform(QTransform().rotate(-roll))
+                self.right_wing.setTransform(QTransform().rotate(-roll))
 
                 self.roll_text.setPlainText(f"Roll: {roll:.1f}°")
                 self.pitch_text.setPlainText(f"Pitch: {pitch:.1f}°")
