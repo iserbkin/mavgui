@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from pymavlink import mavutil
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsRectItem, QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsTextItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsRectItem, QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsTextItem, QGraphicsItemGroup
 from PyQt5.QtCore import QTimer, Qt, QPointF
 from PyQt5.QtGui import QTransform, QBrush, QColor, QPen, QPolygonF, QFont
 
@@ -55,7 +55,6 @@ class VirtualHorizon(QMainWindow):
         self.right_wing.setBrush(QBrush(Qt.yellow))
         self.horizon_group.addToGroup(self.right_wing)
 
-        # 🔄 **Шкала тангажа (Pitch)**
         self.pitch_group = QGraphicsItemGroup()
         self.scene.addItem(self.pitch_group)
 
@@ -103,18 +102,6 @@ class VirtualHorizon(QMainWindow):
         self.vspeed_text.setPos(-190, 100)
         self.scene.addItem(self.vspeed_text)
 
-        self.heading_text = QGraphicsTextItem("Heading: 0°")
-        self.heading_text.setFont(QFont("Arial", 12, QFont.Bold))
-        self.heading_text.setDefaultTextColor(Qt.white)
-        self.heading_text.setPos(-60, -170)
-        self.scene.addItem(self.heading_text)
-
-        self.airspeed_text = QGraphicsTextItem("Airspeed: 0 m/s")
-        self.airspeed_text.setFont(QFont("Arial", 12, QFont.Bold))
-        self.airspeed_text.setDefaultTextColor(Qt.white)
-        self.airspeed_text.setPos(60, -170)
-        self.scene.addItem(self.airspeed_text)
-
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_horizon)
         self.timer.start(100)  
@@ -135,6 +122,14 @@ class VirtualHorizon(QMainWindow):
 
                 self.roll_text.setPlainText(f"Roll: {roll:.1f}°")
                 self.pitch_text.setPlainText(f"Pitch: {pitch:.1f}°")
+
+            msg_vfr = connection.recv_match(type='VFR_HUD', blocking=False)
+            if msg_vfr:
+                altitude = msg_vfr.alt
+                vspeed = msg_vfr.climb
+
+                self.altitude_text.setPlainText(f"Alt: {altitude:.1f} m")
+                self.vspeed_text.setPlainText(f"VSpeed: {vspeed:.1f} m/s")
 
         except Exception as e:
             self.setWindowTitle(f"Error: {e}")
